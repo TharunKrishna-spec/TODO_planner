@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Register</title>
+
+  <!-- Fonts and Tailwind -->
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Theme -->
+  <style type="text/tailwindcss">
+    :root {
+      --background: #111418;
+      --card-bg: rgba(33, 38, 44, 0.5);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #9cabba;
+      --accent: #3d98f4;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+    }
+    .header-title {
+      font-family: 'Orbitron', sans-serif;
+    }
+    .glassmorphism-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.3);
+    }
+    .btn {
+      transition: all 0.3s ease-in-out;
+    }
+    .btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 12px var(--accent);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-[#0f1115] to-[#1b1e23]">
+
+  <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 glassmorphism-card p-10">
+    
+    <!-- Login -->
+    <div>
+      <h2 class="text-3xl header-title mb-6 text-center text-blue-400">Login</h2>
+      <form id="loginForm" class="flex flex-col gap-4">
+        <input type="text" id="loginUser" placeholder="Username" required
+               class="p-3 rounded bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input type="password" id="loginPass" placeholder="Password" required
+               class="p-3 rounded bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button type="submit"
+                class="btn bg-gradient-to-r from-blue-600 to-blue-400 text-white font-semibold py-2 rounded">
+          🚀 Login
+        </button>
+      </form>
+    </div>
+
+    <!-- Register -->
+    <div>
+      <h2 class="text-3xl header-title mb-6 text-center text-green-400">Register</h2>
+      <form id="registerForm" class="flex flex-col gap-4">
+        <input type="text" id="registerUser" placeholder="Username" required
+               class="p-3 rounded bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500" />
+        <input type="password" id="registerPass" placeholder="Password" required
+               class="p-3 rounded bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500" />
+        <button type="submit"
+                class="btn bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold py-2 rounded">
+          🌟 Register
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- JS -->
+  <script>
+    // LOGIN
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const res = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: loginUser.value,
+          password: loginPass.value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('user', JSON.stringify({ username: data.username }));
+        window.location.href = '/';
+      } else {
+        alert(data.error);
+      }
+    };
+
+    // REGISTER
+    document.getElementById('registerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const res = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: registerUser.value,
+          password: registerPass.value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert('Registered! Now log in.');
+      } else {
+        alert(data.error);
+      }
+    };
+  </script>
+
+</body>
+</html>
